@@ -44,6 +44,7 @@ jobs:
           TAG: ${{ steps.release.outputs.tag }}
           ARTIFACT: ${{ steps.release.outputs.artifact }}
         run: |
+          mkdir -p "$RUNNER_TEMP/release"
           gh release download "$TAG" \
             --repo neoanki2/neoanki2 \
             --pattern "$ARTIFACT" \
