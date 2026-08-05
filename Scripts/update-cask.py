@@ -34,9 +34,14 @@ content = f'''cask "neoanki2" do
 
   app "NeoAnki2.app"
 
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{{appdir}}/NeoAnki2.app"]
+  end
+
   caveats <<~EOS
-    NeoAnki2 is currently ad-hoc signed and is not Apple-notarized. On first
-    launch, Control-click NeoAnki2 in Applications, choose Open, then confirm.
+    NeoAnki2 is currently ad-hoc signed and is not Apple-notarized. This cask
+    removes its quarantine attribute after installation so it can launch normally.
   EOS
 end
 '''

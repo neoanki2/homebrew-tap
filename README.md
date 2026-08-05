@@ -18,5 +18,6 @@ brew upgrade --cask neoanki2
 
 The cask is updated automatically after the tested `main` revision publishes a
 GitHub release. Release DMGs are universal, checksummed, provenance-attested,
-and ad-hoc signed. They are not yet Apple-notarized; follow the cask caveat for
-the first launch.
+and ad-hoc signed. They are not yet Apple-notarized, so the cask transparently
+removes NeoAnki2's quarantine attribute after installation. Developer ID signing
+and Apple notarization remain the intended long-term release path.
