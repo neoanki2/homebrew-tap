@@ -1,0 +1,74 @@
+name: Update cask
+
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-cask
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Track latest NeoAnki2 release
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Resolve latest app release
+        id: release
+        run: |
+          release=$(gh api repos/neoanki2/neoanki2/releases/latest)
+          tag=$(printf '%s' "$release" | jq -r .tag_name)
+          version=${tag#v}
+          test "$tag" = "v$version"
+          test -n "$version"
+          artifact="NeoAnki2-$version-mac-universal.dmg"
+          printf '%s' "$release" | jq -e \
+            --arg artifact "$artifact" \
+            '.assets[] | select(.name == $artifact)' >/dev/null
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
+
+      - name: Download and verify release artifact
+        id: artifact
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+          ARTIFACT: ${{ steps.release.outputs.artifact }}
+        run: |
+          gh release download "$TAG" \
+            --repo neoanki2/neoanki2 \
+            --pattern "$ARTIFACT" \
+            --pattern "$ARTIFACT.sha256" \
+            --dir "$RUNNER_TEMP/release"
+          (cd "$RUNNER_TEMP/release" && shasum -a 256 -c "$ARTIFACT.sha256")
+          checksum=$(shasum -a 256 "$RUNNER_TEMP/release/$ARTIFACT" | awk '{print $1}')
+          echo "sha256=$checksum" >> "$GITHUB_OUTPUT"
+
+      - name: Render cask
+        run: |
+          python3 Scripts/update-cask.py \
+            Casks/neoanki2.rb \
+            "${{ steps.release.outputs.version }}" \
+            "${{ steps.artifact.outputs.sha256 }}"
+          ruby -c Casks/neoanki2.rb
+
+      - name: Publish cask update
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          git config user.name "neoanki2-release-bot"
+          git config user.email "release-bot@neoanki2.invalid"
+          git add Casks/neoanki2.rb
+          if ! git diff --cached --quiet; then
+            git commit -m "Update NeoAnki2 to $VERSION"
+            git push origin HEAD:main
+          fi
