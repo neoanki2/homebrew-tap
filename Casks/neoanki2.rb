@@ -1,11 +1,11 @@
 cask "neoanki2" do
-  version "1.0.264"
-  sha256 "d837fa4bcbebdd5335331e81daf5ccc3d49fee73f1ef2ded5fc44dbc0edf0531"
+  version "1.0.265"
+  sha256 "0b90347c6ee8957ec383e73202dd32dafa00da372e50ea52be7e26a19acffe9d"
 
   url "https://github.com/neoanki2/neoanki2/releases/download/v#{version}/NeoAnki2-#{version}-mac-universal.dmg"
   name "NeoAnki2"
   desc "Native, local-first spaced-repetition app with FSRS scheduling"
-  homepage "https://neoanki2.github.io/neoanki2/"
+  homepage "https://neoanki2.github.io/"
 
   depends_on macos: :sonoma
 
