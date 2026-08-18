@@ -5,7 +5,7 @@ cask "neoanki2" do
   url "https://github.com/neoanki2/neoanki2/releases/download/v#{version}/NeoAnki2-#{version}-mac-universal.dmg"
   name "NeoAnki2"
   desc "Native, local-first spaced-repetition app with FSRS scheduling"
-  homepage "https://neoanki2.github.io/"
+  homepage "https://neoanki2.github.io/neoanki2/"
 
   depends_on macos: :sonoma
 
