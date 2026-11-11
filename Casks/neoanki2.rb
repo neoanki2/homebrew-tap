@@ -1,6 +1,6 @@
 cask "neoanki2" do
-  version "1.0.321"
-  sha256 "c5bda67d2827e778a7cccfb43b7f702757812b968e5cbe32b2ebdbb827c9fa79"
+  version "1.0.322"
+  sha256 "b9c57563daf7e2697a5c67edabebfdf18d4f2c9fcea8754a6c33efc6785fd54e"
 
   url "https://github.com/neoanki2/neoanki2/releases/download/v#{version}/NeoAnki2-#{version}-mac-universal.dmg"
   name "NeoAnki2"
