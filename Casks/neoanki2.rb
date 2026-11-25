@@ -1,23 +1,11 @@
 cask "neoanki2" do
-  version "1.0.351"
-  sha256 "7fcee7e0171afc8b1ec9d2d5cdd65c1f531830bfa4d6d9c3e34568db663fc88a"
+  version "1.0.352"
+  sha256 "a1ce5993d5a7a42d9502c342612146adc24315c40768b87090c67af7abeb68bf"
 
   url "https://github.com/neoanki2/neoanki2/releases/download/v#{version}/NeoAnki2-#{version}-mac-universal.dmg"
   name "NeoAnki2"
   desc "Native, local-first spaced-repetition app with FSRS scheduling"
-  homepage "https://neoanki2.github.io/neoanki2/"
-
+  homepage "https://neoanki2.github.io/"
   depends_on macos: :sonoma
-
   app "NeoAnki2.app"
-
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/NeoAnki2.app"]
-  end
-
-  caveats <<~EOS
-    NeoAnki2 is currently ad-hoc signed and is not Apple-notarized. This cask
-    removes its quarantine attribute after installation so it can launch normally.
-  EOS
 end
